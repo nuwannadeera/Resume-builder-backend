@@ -1,7 +1,9 @@
 <?php
 
 /*
+ *
  * add database credentials
+ *
  */
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
@@ -12,7 +14,7 @@ define('DB_NAME', 'resumebuilder');
 function connect() {
 
     // Creating a connection using defined constants
-    $connect = mysqli_connect('DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME');
+    $connect = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     if (mysqli_connect_errno($connect)) {
         // If connection failed, display an error message and terminate
