@@ -1,10 +1,14 @@
 <?php
 
-include 'connection.php';
-
+//handle CORS policy error
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit();
+}
+
+include 'connection.php';
 
 $postdata = file_get_contents("php://input");
 $param = json_decode($postdata, TRUE);
@@ -23,7 +27,7 @@ $date_of_birth = $user['date_of_birth'];
 $linkedin_profile = $user['linkedin_profile'];
 
 $has_error = 0;
-$user_index = 0;
+$user_index = -1;
 mysqli_autocommit($conn, FALSE);
 
 $query4 = "INSERT INTO resume_user
@@ -77,7 +81,7 @@ for ($x = 0; $x < sizeof($expList); $x++) {
     $description = array_key_exists('description', $expList[$x]) ?
         $expList[$x]['description'] : $expList[$x]['description'] = "";
 
-    $query2 = "INSERT INTO experience
+    $query3 = "INSERT INTO experience
            (`uid`
            ,`position`
            ,`company`
@@ -85,7 +89,7 @@ for ($x = 0; $x < sizeof($expList); $x++) {
            ,`description`
            ,`end_date`)
      VALUES($user_index,'$position','$company','$start_date','$description','$end_date')";
-    if ($conn->query($query2) === TRUE) {
+    if ($conn->query($query3) === TRUE) {
         $conn->insert_id;
     } else {
         $has_error = 1;
@@ -98,11 +102,11 @@ for ($x = 0; $x < sizeof($expList); $x++) {
 for ($x = 0; $x < sizeof($skillList); $x++) {
     $skill = $skillList[$x]['skill'];
 
-    $query2 = "INSERT INTO skills
+    $query5 = "INSERT INTO skills
            (`uid`
            ,`skill`)
      VALUES($user_index,'$skill')";
-    if ($conn->query($query2) === TRUE) {
+    if ($conn->query($query5) === TRUE) {
         $conn->insert_id;
     } else {
         $has_error = 1;
